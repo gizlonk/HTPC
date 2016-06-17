@@ -1,5 +1,9 @@
 - hosts: local
   tasks:
+   - name: Install git
+     apt: pkg=git update_cache=true
+   - name: Install python-cheetah
+     apt: pkg=python-cheetah update_cache=true
    - name: Clone Couch Potato
      git: repo=https://github.com/RuudBurger/CouchPotatoServer.git dest=/opt/couchpotato force=yes
    - name: Create Startup for CouchPotato
