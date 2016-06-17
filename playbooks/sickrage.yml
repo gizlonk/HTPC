@@ -1,0 +1,42 @@
+- hosts: local
+  vars:
+   srrepo: https://github.com/SickRage/SickRage.git
+   username: gizlonk
+  tasks:
+   - name: Install SickRage Dependancies
+     apt: pkg={{item}} state=installed
+     with_items:
+          - python-pip
+          - python-dev
+          - git-core
+          - libssl-dev
+          - libxslt1-dev
+          - libxslt1.1
+          - libxml2-dev
+          - libxml2
+          - libssl-dev
+          - libffi-dev
+          - build-essential
+          - unrar   
+   - name: pip install pyopenssl
+     pip: name=pyopenssl
+   - name: Clone SickRage
+     git: repo={{srrepo}} dest=/opt/sickrage force=yes
+   - name: Change ownership of SickRage Folder
+     file: path=/opt/sickrage owner={{username}} group={{username}}
+   - name: create SickRage default file
+     file: path=/etc/default/sickrage state=touch
+   - name: ensure SR_USER is in /etc/default/sickrage
+     lineinfile: dest=/etc/default/sickrage line="SR_USER={{username}}"
+   - name: ensure SR_HOME is in /etc/default/sickrage
+     lineinfile: dest=/etc/default/sickrage line="SR_HOME=/opt/sickrage"
+   - name: ensure SR_DATA is in /etc/default/sickrage
+     lineinfile: dest=/etc/default/sickrage line="SR_DATA=/opt/sickrage"
+   - name: ensure SR_PIDFILE is in /etc/default/sickrage
+     lineinfile: dest=/etc/default/sickrage line="SR_PIDFILE=/opt/sickrage/sickrage.pid"
+   - name: Copy the default SickRage init.d script
+     shell: cp /opt/sickrage/runscripts/init.ubuntu /etc/init.d/sickrage
+   - name: Ensure SickRage init.d script is executable
+     file: path=/etc/init.d/sickrage mode=0777
+   - name: Ensure SickRage is startuppable
+     shell: update-rc.d sickrage defaults

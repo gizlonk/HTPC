@@ -1,17 +1,20 @@
 - hosts: local
+  vars:
+    cprepo: https://github.com/RuudBurger/CouchPotatoServer.git
+    username: gizlonk
   tasks:
    - name: Install git
      apt: pkg=git update_cache=true
    - name: Install python-cheetah
      apt: pkg=python-cheetah update_cache=true
    - name: Clone Couch Potato
-     git: repo=https://github.com/RuudBurger/CouchPotatoServer.git dest=/opt/couchpotato force=yes
+     git: repo=cprepo dest=/opt/couchpotato force=yes
    - name: Create Startup for CouchPotato
      shell: cp /opt/couchpotato/init/ubuntu /etc/init.d/couchpotato
    - name: Make CouchPotato Startup Executable
      file: path=/etc/init.d/couchpotato mode=0770
    - name: Edit ubuntu.default with correct USER values
-     lineinfile: dest=/opt/couchpotato/init/ubuntu.default regexp=^CP_USER line=CP_USER=gizlonk
+     lineinfile: dest=/opt/couchpotato/init/ubuntu.default regexp=^CP_USER line=CP_USER={{username}}
    - name: Edit ubuntu.default with correct HOME values
      lineinfile: dest=/opt/couchpotato/init/ubuntu.default regexp=^CP_HOME line=CP_HOME=/opt/couchpotato
    - name: Edit ubuntu.default with correct DATA values
