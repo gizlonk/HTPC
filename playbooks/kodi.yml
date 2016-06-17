@@ -1,0 +1,19 @@
+- hosts: local
+  tasks:
+   - name: Add Kodi Repository
+     apt_repository: repo='ppa:team-xbmc/ppa'
+   - name: Install Kodi
+     apt: pkg=kodi state=installed update_cache=true
+   - name: Install git
+     apt: pkg=git update_cache=true
+   - name: Install python-cheetah
+     apt: pkg=python-cheetah update_cache=true
+
+   - name: Clone Couch Potato
+     git: repo=https://github.com/RuudBurger/CouchPotatoServer.git dest=/opt/couchpotato
+   - name: Change ownership of Couch Potato Folder
+     file: path=/opt/couchpotato owner=gizlonk group=gizlonk recurse=yes
+   - name: Make Couch Potato a Service
+     shell: cp /opt/couchpotato/init/ubuntu /etc/init.d/ubuntu
+   - name: Make Couch Potato Executable
+     file: path=/etc/init.d/ubuntu mode=0770

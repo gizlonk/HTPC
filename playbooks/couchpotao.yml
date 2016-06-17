@@ -1,0 +1,22 @@
+- hosts: local
+  tasks:
+   - name: Clone Couch Potato
+     git: repo=https://github.com/RuudBurger/CouchPotatoServer.git dest=/opt/couchpotato force=yes
+   - name: Create Startup for CouchPotato
+     shell: cp /opt/couchpotato/init/ubuntu /etc/init.d/couchpotato
+   - name: Make CouchPotato Startup Executable
+     file: path=/etc/init.d/couchpotato mode=0770
+   - name: Edit ubuntu.default with correct USER values
+     lineinfile: dest=/opt/couchpotato/init/ubuntu.default regexp=^CP_USER line=CP_USER=gizlonk
+   - name: Edit ubuntu.default with correct HOME values
+     lineinfile: dest=/opt/couchpotato/init/ubuntu.default regexp=^CP_HOME line=CP_HOME=/opt/couchpotato
+   - name: Edit ubuntu.default with correct DATA values
+     lineinfile: dest=/opt/couchpotato/init/ubuntu.default regexp=^CP_DATA line=CP_DATA=/opt/couchpotato
+   - name: Edit ubuntu.default with correct PIDFILE values
+     lineinfile: dest=/opt/couchpotato/init/ubuntu.default regexp=^CP_PIDFILE line=CP_PIDFILE=/opt/couchpotato/couchpotato.pid
+   - name: Move ubuntu.default to /etc/default     
+     shell: cp /opt/couchpotato/init/ubuntu.default /etc/default/couchpotato
+   - name: Make /etc/default/couchpotato Executable
+     file: path=/etc/default/couchpotato mode=0777
+   - name: Update boot sequence
+     shell: update-rc.d couchpotato defaults
