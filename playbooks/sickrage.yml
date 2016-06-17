@@ -18,6 +18,8 @@
           - libffi-dev
           - build-essential
           - unrar   
+          - libssl1.0.0
+          - libssl-dev
    - name: pip install pyopenssl
      pip: name=pyopenssl
    - name: Clone SickRage

@@ -1,0 +1,10 @@
+- hosts: local
+  tasks:
+  - name: Download uTorrent
+    get_url: url=http://download-new.utorrent.com/endpoint/utserver/os/linux-x64-ubuntu-13-04/track/beta/ dest=/tmp/utserver.tar.gz
+  - name: Extract uTorrent to /opt/
+    unarchive: src=/tmp/utserver.tar.gz dest=/opt/ copy=no
+  - name: Ensure uTserver has the correct permissions
+    file: path=/opt/utorrent-server-alpha-v3_3 mode=0777 recurse=yes
+  - name: Create symlink for uTorrent
+    file: src=/opt/utorrent-server-alpha-v3_3/utserver dest=/usr/bin/utserver state=link
