@@ -20,6 +20,7 @@
           - unrar   
           - libssl1.0.0
           - libssl-dev
+          - apt-transport-https
    - name: pip install pyopenssl
      pip: name=pyopenssl
    - name: Clone SickRage

@@ -8,3 +8,9 @@
     file: path=/opt/utorrent-server-alpha-v3_3 mode=0777 recurse=yes
   - name: Create symlink for uTorrent
     file: src=/opt/utorrent-server-alpha-v3_3/utserver dest=/usr/bin/utserver state=link
+  - name: Get uTorrent start script
+    get_url: url=https://raw.githubusercontent.com/gizlonk/HTPC/master/files/utorrent dest=/etc/init.d/utorrent
+  - name: Set Permissions for /etc/init.d/utorrent
+    file: path=/etc/init.d/utorrent mode=0755
+  - name: Make uTorrent startupable
+    shell: update-rc.d utorrent defaults

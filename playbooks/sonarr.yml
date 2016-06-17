@@ -1,0 +1,20 @@
+- hosts: local
+  vars:
+     username: gizlonk
+  tasks:
+   - name: Add nzbdrone apt_key
+     apt_key: keyserver=keyserver.ubuntu.com id=3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+   - name: Create xamarin repo
+     file: path=/etc/apt/sources.list.d/mono-xamarin.list state=touch
+   - name: Add the mono repo
+     lineinfile: dest=/etc/apt/sources.list.d/mono-xamarin.list line="deb http://download.mono-project.com/repo/debian wheezy main"
+   - name: Add a key - I dont know how to do this the ansible way
+     shell: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FDA5DFFC 
+   - name: Create the Sonarr repo
+     file: path=/etc/apt/sources.list.d/sonarr.list state=touch
+   - name: Add the Sonarr repo
+     lineinfile: dest=/etc/apt/sources.list.d/sonarr.list line="deb https://apt.sonarr.tv/ master main"
+   - name: Install Sonarr
+     apt: pkg=nzbdrone state=present update_cache=true
+   - name: Change ownership of the Nzbdrone folder
+     file: path=/opt/NzbDrone owner={{username}} group={{username}} recurse=yes
